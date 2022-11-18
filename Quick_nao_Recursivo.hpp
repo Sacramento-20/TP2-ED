@@ -5,27 +5,29 @@
 
 
 using namespace std;
- 
+
+int n_trocasIt = 0; 
+
 /* Função Partição*/
-int Particaonaorecursivo(int *vetor, int inicio, int final)
+int Particaonaorecursivo(Registros *vetor, int inicio, int final)
 {
-    int x = vetor[final];
+    int x = vetor[final].chave;
     int i = (inicio - 1);
  
     for (int j = inicio; j <= final - 1; j++) {
-        if (vetor[j] <= x) {
-            i++;
-            // troca(&vetor[i], &vetor[j]);    
+        if (vetor[j].chave <= x) {
+            i++;   
             troca(vetor, i, j);
+            n_trocasIt++;
         }
     }
     troca(vetor, i+1, final);
-    // troca(&vetor[i + 1], &vetor[final]);
+    n_trocasIt++;
     return (i + 1);
 }
  
 
-void OrdenaIterativo(int *vetor, int inicio, int final)
+void OrdenaIterativo(Registros *vetor, int inicio, int final)
 {
     
     int pilha[final - inicio + 1];
@@ -55,9 +57,11 @@ void OrdenaIterativo(int *vetor, int inicio, int final)
     }
 }
 
-void QuickSortIterativo(int *vetor, int inicio, int fim)
+void QuickSortIterativo(Registros *vetor, int inicio, int fim, int *n_troca)
 {
     OrdenaIterativo(vetor, inicio, fim-1);
+    *n_troca = n_trocasIt;
+    n_trocasIt = 0;
 }
 
 

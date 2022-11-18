@@ -8,19 +8,19 @@ using namespace std;
 
 int n_elementos_vetor = 0;
 int valor_mediana = 0;
-
+int n_trocasMed;
 
 /*==============================================================================================*/
 /* Funções auxiliares para obtenção do valor da mediana */
-void Ordenar_vetor(int *vetor, int n_elementos)
+void Ordenar_vetor(Registros *vetor, int n_elementos)
 {
-  int aux;
+  Registros aux;
 
   for (int i = 0; i < n_elementos; i++)
   {
     for (int j = i; j < n_elementos; j++)
     {
-      if (vetor[i] >= vetor[j])
+      if (vetor[i].chave >= vetor[j].chave)
       {
         aux = vetor[i];
         vetor[i] = vetor[j];
@@ -30,14 +30,14 @@ void Ordenar_vetor(int *vetor, int n_elementos)
   } 
 }
 
-int SelecionaMediana(int *vetor_total, int n_elementos, int k)
+int SelecionaMediana(Registros *vetor_total, int n_elementos, int k)
 {
   
   srand(time(NULL));
 
   int indice;
   int vetor_indices[k];
-  int vetor_amostras[k];
+  Registros vetor_amostras[k];
 
 
   /* Colocar todos os indices como -1 para certificar que todas as posiçoes são validas*/
@@ -71,14 +71,14 @@ int SelecionaMediana(int *vetor_total, int n_elementos, int k)
 
   for (int i = 0; i < k; i++)
   {
-    vetor_amostras[i] = vetor_total[vetor_indices[i]];
+    vetor_amostras[i].chave = vetor_total[vetor_indices[i]].chave;
   }
 
   
   Ordenar_vetor(vetor_amostras, k);
   
   int meio = (0+k) / 2;
-  return vetor_amostras[meio];
+  return vetor_amostras[meio].chave;
 
 }
 
@@ -88,12 +88,12 @@ int SelecionaMediana(int *vetor_total, int n_elementos, int k)
 
 
 
-int ParticaoMediana(int *A, int inicio, int fim) {
+int ParticaoMediana(Registros *A, int inicio, int fim) {
 
     int meio = SelecionaMediana(A, n_elementos_vetor, valor_mediana);
-    int a = A[inicio];
-    int b = A[meio];
-    int c = A[fim];
+    int a = A[inicio].chave;
+    int b = A[meio].chave;
+    int c = A[fim].chave;
     int medianaIndice; //índice da mediana
     
     //A sequência de if...else a seguir verifica qual é a mediana
@@ -126,11 +126,11 @@ int ParticaoMediana(int *A, int inicio, int fim) {
     }
     //coloca o elemento da mediana no fim para poder usar o Quicksort de Cormen
     troca(A, medianaIndice, fim);
-    // trocas++;
+    n_trocasMed++;
         
     //*******************ALGORITMO DE PARTIÇÃO DE CORMEN*********************
     //o pivo é o elemento final
-    int pivo = A[fim];
+    int pivo = A[fim].chave;
     int i = inicio - 1;
     int j;
     /*
@@ -139,20 +139,20 @@ int ParticaoMediana(int *A, int inicio, int fim) {
      * Esses elementos são colocados na partição esquerda.         
      */
     for (j = inicio; j <= fim - 1; j++) {
-        if (A[j] <= pivo) {
+        if (A[j].chave <= pivo) {
             i = i + 1;
             troca(A, i, j);
-            // trocas++;
+            n_trocasMed++;
         }
     }
     //coloca o pivô na posição de ordenação
     troca(A, i + 1, fim);
-    // trocas++;
+    n_trocasMed++;
     return i + 1; //retorna a posição do pivô
 }
 
 //Quicksort mediana de três
-void OrdenaMediana(int A[], int inicio, int fim) {
+void OrdenaMediana(Registros A[], int inicio, int fim) {
     if (inicio <= fim) {
         //realiza a partição
         int pivo = ParticaoMediana(A, inicio, fim);
@@ -163,11 +163,13 @@ void OrdenaMediana(int A[], int inicio, int fim) {
     }
 }
 
-void QuicksortMediana(int *A, int inicio, int fim, int mediana)
+void QuicksortMediana(Registros *A, int inicio, int fim, int mediana, int *n_troca)
 {
     n_elementos_vetor = fim;
     valor_mediana = mediana;
     OrdenaMediana(A, 0, n_elementos_vetor - 1);
+    *n_troca = n_trocasMed;
+    n_trocasMed = 0;
 }
 
 #endif

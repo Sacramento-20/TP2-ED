@@ -8,52 +8,56 @@ using namespace std;
 // Número total de elementos a serem ordenados
  
 int particao;
+int n_trocasSel = 0;
 
 // Função para realizar a ordenação por inserção em `vetor[]`
-void insertionSort(int *vetor, int low, int n)
+void insertionSort(Registros *vetor, int low, int n)
 {
     // Começa a partir do segundo elemento (o elemento no índice 0
     // já está ordenado)
     for (int i = low + 1; i <= n; i++)
     {
-        int value = vetor[i];
+        int value = vetor[i].chave;
         int j = i;
  
         // encontra o índice `j` dentro do subconjunto ordenado `vetor[0…i-1]`
         // onde o elemento `vetor[i]` pertence
-        while (j > low && vetor[j - 1] > value)
+        while (j > low && vetor[j - 1].chave > value)
         {
             vetor[j] = vetor[j - 1];
+            n_trocasSel++;
             j--;
         }
  
         // note que o subvetoray `vetor[j…i-1]` é deslocado para
         // a direita por uma posição, ou seja, `vetor[j+1…i]`
  
-        vetor[j] = value;
+        vetor[j].chave = value;
     }
 }
  
 /* Função Partição*/
-int ParticaoSelecao(int *vetor, int inicio, int final)
+int ParticaoSelecao(Registros *vetor, int inicio, int final)
 {
-    int x = vetor[final];
+    int x = vetor[final].chave;
     int i = (inicio - 1);
  
     for (int j = inicio; j <= final - 1; j++) {
-        if (vetor[j] <= x) {
+        if (vetor[j].chave <= x) {
             i++;
             troca(vetor, i, j);
+            n_trocasSel++;
             // troca(&vetor[i], &vetor[j]);
         }
     }
     troca(vetor, i + 1,final);
+    n_trocasSel++;
     // troca(&vetor[i + 1], &vetor[final]);
     // trocas++;
     return (i + 1);
 }
 
-void OrdenaSelecao(int *vetor, int low, int high)
+void OrdenaSelecao(Registros*vetor, int low, int high)
 {
     while (low < high)
     {
@@ -81,10 +85,12 @@ void OrdenaSelecao(int *vetor, int low, int high)
     }
 }
 
-void QuicksortSelecao(int *vetor, int inicio, int fim, int ordenador)
+void QuicksortSelecao(Registros *vetor, int inicio, int fim, int ordenador, int *n_troca)
 {
     particao = ordenador;
     OrdenaSelecao(vetor, 0, fim - 1);
+    *n_troca = n_trocasSel;
+    n_trocasSel = 0;
 }
  
 #endif

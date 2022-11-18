@@ -1,0 +1,5 @@
+./main -v 1 -s 10 -i entrada.txt -o saida10.txt
+./main -v 2 -k 3 -s 10 -i entrada.txt -o saida10.txt          mediana
+./main -v 3 -m 100 -s 10 -i entrada.txt -o saida10.txt        selecao
+./main -v 4 -s 10 -i entrada.txt -o saida10.txt
+./main -v 5 -s 10 -i entrada.txt -o saida10.txt

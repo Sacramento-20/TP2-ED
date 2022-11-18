@@ -3,36 +3,77 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <string>
+#include "memlog.h" 
+#include "msgassert.h" 
 
 using namespace std;
 
-void GeraVetores(int *vetorQuick, int *vetorHeap, int *vetorMerge, int tamanho, int semente)
+struct Registros
 {
-  // semente para entrada aleatória
-  // srand(time(NULL));
-  srand(semente);
+  int chave;
+  string caracteres[15];
+  float numeros[10];
 
-  // gera valores aleatórios
+};
+
+float Criafloat(){
+  float retorno;
+
+  retorno = rand();
+  return retorno;
+}
+
+string CriaStrings(){
+  string retorno;
+
+  retorno.reserve(200);
+
+  for (int i = 0; i < 200; i++)
+  {
+    retorno += 'a' + (char)(rand()%26);
+  }
+  return retorno;
+}
+
+void GeraRegistros(Registros *vetor, int tamanho, int semente)
+{
+  srand(semente);
+  
   for (int i = 0; i < tamanho; i++) {
-    vetorQuick[i] = rand() % tamanho;
-    vetorHeap[i] = rand() % tamanho;
-    vetorMerge[i] = rand() % tamanho;
+    vetor[i].chave = rand() % tamanho;
+
+    for (int j = 0; j < 15; j++)
+    {
+      vetor[i].caracteres[j] = CriaStrings();
+    }
+    for (int k = 0; k < 10; k++)
+    {
+      vetor[i].numeros[k] = Criafloat();
+    } 
   }
 }
 
 //função auxiliar para realizar as trocas de elementos
-void troca(int *A, int i, int j)
+void troca(Registros *A, int i, int j)
 {
-  int temp = A[i];
+  Registros temp = A[i];
   A[i] = A[j];
+  ESCREVEMEMLOG((long int)(&(A[i])), sizeof(double),0);
   A[j] = temp;
+  ESCREVEMEMLOG((long int)(&(A[j])), sizeof(double),0);
 }
 
-void printvetor(int vetor[], int n)
+void printvetor(Registros vetor[], int n)
 {
   int i;
   for (i = 0; i < n; ++i)
-    cout << vetor[i] << " ";
+  {
+    LEMEMLOG((long int)(&(vetor[i].chave)), sizeof(double),0);
+    // cout << vetor[i].chave << " ";
+  }
 }
 
 
